@@ -1,17 +1,19 @@
-# typescript-package-scaffold
+# tui
 
 [![travis-ci](https://travis-ci.org/yume-chan/typescript-package-scaffold.svg?branch=master)](https://travis-ci.org/yume-chan/typescript-package-scaffold)
 [![Greenkeeper badge](https://badges.greenkeeper.io/yume-chan/typescript-package-scaffold.svg)](https://greenkeeper.io/)
 
-*DESCRIPTION TO BE FILLED*
+A text-based user interface framework inspired by WPF.
 
-- [typescript-package-scaffold](#typescript-package-scaffold)
-  - [API](#API)
-  - [Development](#Development)
-    - [Install dependencies:](#Install-dependencies)
-    - [Testing](#Testing)
-    - [Coverage](#Coverage)
-  - [License](#License)
+This project is currently in plannig stage, you can see the proposed API design in the [docs](docs) folder.
+
+- [tui](#tui)
+  - [API](#api)
+  - [Development](#development)
+    - [Install dependencies:](#install-dependencies)
+    - [Testing](#testing)
+    - [Coverage](#coverage)
+  - [License](#license)
 
 ## API
 
