@@ -2,27 +2,27 @@ import { Color } from "./element";
 import { Event } from './event';
 
 export class TextBlock extends Element implements TextBlock.Inline {
-    text: string | (string | TextBlock.Run)[];
+    text: string | (string | TextBlock.Inline)[];
 
     foregroundColor: Color;
 
     underline: boolean;
 
     italic: boolean;
+
+    readonly onClick: Event<this, void>;
 }
 
 export namespace TextBlock {
-    export interface Inline {
-        text: string | (string | TextBlock.Run)[];
+    export class Inline {
+        text: string | (string | TextBlock.Inline)[];
 
         foregroundColor: Color;
 
         underline: boolean;
 
         italic: boolean;
-    }
 
-    export interface Run extends Inline {
-        onClick: Event<Run, void>;
+        readonly onClick: Event<this, void>;
     }
 }
