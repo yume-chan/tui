@@ -24,7 +24,7 @@ export class Terminal {
             height: this.child.desiredSize.height,
         });
 
-        const buffer = this.child.render();
+        const buffer = this.child.renderedBuffer;
         for (let row = 0; row < this.child.actualHeight; row++) {
             for (let column = 0; column < this.child.actualWidth; column++) {
                 const cell = buffer[row][column];

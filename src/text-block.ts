@@ -159,12 +159,7 @@ export class TextBlock extends Element {
         return { row, column };
     }
 
-    public render(): Cell[][] {
-        const buffer: Cell[][] = new Array(this.desiredSize.height);
-        for (let i = 0; i < buffer.length; i++) {
-            buffer[i] = new Array(this.desiredSize.width);
-        }
-
+    protected render(buffer: Cell[][]) {
         const style: CellStyle = {
             backgroundColor: this.backgroundColor,
             foregroundColor: this.foregroundColor,
@@ -173,7 +168,6 @@ export class TextBlock extends Element {
             underline: this.underline,
         }
         this.renderInline(this.text, buffer, 0, 0, style);
-        return buffer;
     }
 }
 

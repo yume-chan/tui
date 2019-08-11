@@ -1,9 +1,11 @@
+import { i32 } from "./types";
+
 export interface Rect {
-    x: number;
+    x: i32;
 
-    y: number;
+    y: i32;
 
-    width: number;
+    width: i32;
 
-    height: number;
+    height: i32;
 }

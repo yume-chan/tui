@@ -3,6 +3,7 @@ import { HorizontalAlignment } from "./horizontal-alignment";
 import { Thickness } from "./thickness";
 import { Rect } from "./rect";
 import { Event } from "./event";
+import { i32, f64 } from "./types";
 
 /**
  * A `Length` value.
@@ -13,7 +14,7 @@ import { Event } from "./event";
  *
  * The meaning of `auto` may vary between `Element`s.
  */
-export type Length = number | 'auto' | string;
+export type Length = f64 | 'auto' | string;
 
 /**
  * A `Color` value
@@ -24,7 +25,7 @@ export type Length = number | 'auto' | string;
  */
 export type Color = string | undefined;
 
-namespace Ensure {
+export namespace Ensure {
     export function length(name: string, value: Length, allowInfinity: boolean, allowAuto: boolean) {
         if (typeof value === 'number') {
             if (Number.isNaN(value)) {
@@ -73,7 +74,7 @@ export abstract class Element {
      */
     public get minHeight(): Length { return this._minHeight; }
     public set minHeight(value: Length) {
-        Ensure.length('minHeight', value, true, false);
+        Ensure.length('minHeight', value, false, false);
         this._minHeight = value;
     }
 
@@ -103,7 +104,7 @@ export abstract class Element {
      */
     public get minWidth(): Length { return this._minWidth; }
     public set minWidth(value: Length) {
-        Ensure.length('minWidth', value, true, false);
+        Ensure.length('minWidth', value, false, false);
         this._minWidth = value;
     }
 
@@ -154,18 +155,6 @@ export abstract class Element {
      */
     public get actualWidth(): number { return this._actualWidth; }
 
-    private _actualOffset: Size = { width: 0, height: 0 };
-    /**
-     * Gets the position of this `Element`, relative to its parent,
-     * computed during the arrange pass of the layout process.
-     */
-    public get actualOffset(): Size { return this._actualOffset; }
-
-    /**
-     * Gets the size that this `Element` computed during the arrange pass of the layout process.
-     */
-    public get actualSize(): Size { return { width: this.actualWidth, height: this.actualHeight }; }
-
     protected _allowFocusOnInteraction: boolean = false;
     public get allowFocusOnInteraction(): boolean { return this._allowFocusOnInteraction; }
     public set allowFocusOnInteraction(value: boolean) { this._allowFocusOnInteraction = value; }
@@ -195,17 +184,19 @@ export abstract class Element {
      */
     public get onLostFocus(): Event<void> { return this._onLostFocus; }
 
-    protected computeAutoWidth(availableWidth: number) {
+    public renderedBuffer: Cell[][] = [];
+
+    protected computeAutoWidth(availableWidth: number): number {
         return availableWidth;
     }
 
-    protected computeAutoHeight(availableHeight: number) {
+    protected computeAutoHeight(availableHeight: number): number {
         return availableHeight;
     }
 
-    private computeWidth(availableWidth: number, length: Length) {
+    protected computeWidth(availableWidth: i32, length: Length): f64 {
         if (typeof length === 'number') {
-            return Math.floor(length);
+            return length;
         }
 
         if (length === 'auto') {
@@ -215,9 +206,9 @@ export abstract class Element {
         return availableWidth * Number.parseFloat(length) / 100;
     }
 
-    private computeHeight(availableHeight: number, length: Length) {
+    protected computeHeight(availableHeight: number, length: Length): f64 {
         if (typeof length === 'number') {
-            return Math.floor(length);
+            return length;
         }
 
         if (length === 'auto') {
@@ -228,8 +219,22 @@ export abstract class Element {
     }
 
     public arrange(finalRect: Rect): void {
+        finalRect = this.arrangeOverride(finalRect);
         this._actualWidth = finalRect.width;
         this._actualHeight = finalRect.height;
+
+        const buffer: Cell[][] = new Array(finalRect.height);
+        for (let i = 0; i < buffer.length; i++) {
+            buffer[i] = new Array(finalRect.width);
+        }
+
+        this.render(buffer);
+
+        this.renderedBuffer = buffer;
+    }
+
+    protected arrangeOverride(finalRect: Rect): Rect {
+        return finalRect;
     }
 
     public measure(availableSize: Size): void {
@@ -270,8 +275,8 @@ export abstract class Element {
         };
     }
 
-    public render(): Cell[][] {
-        return [];
+    protected render(buffer: Cell[][]): void {
+        // do nothing
     }
 }
 
